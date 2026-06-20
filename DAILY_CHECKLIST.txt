@@ -1,0 +1,239 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    DAILY LEAD AUTOMATION CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════
+
+TIME REQUIRED: 30 seconds per day
+BEST TIME: Every morning (9-10 AM)
+
+───────────────────────────────────────────────────────────────────────────────
+DAILY TASK (Do This Every Morning)
+───────────────────────────────────────────────────────────────────────────────
+
+☐ Step 1: Gather 100 Leads
+  - From Apollo, LinkedIn, your list, etc.
+  - Get: Name, Email, Title, Company, Industry, Location
+  - Time: ~30 minutes (you do this)
+
+☐ Step 2: Format as JSON
+  - Use standard format from LEADS_JSON_FORMAT.md
+  - Or use Excel formula to convert CSV
+  - Verify all 7 fields present
+  - Check titles are decision-maker level
+  - Check industries match supported list
+  - Time: ~5 minutes
+
+☐ Step 3: Upload to Dashboard
+  - Go to: https://YOUR_VERCEL_URL or http://localhost:3000
+  - Click "Login with Google" (if needed)
+  - Paste JSON in text area
+  - Click "Process & Send Emails"
+  - Wait for results
+  - Time: ~30 seconds
+
+☐ Step 4: Verify Results
+  - Check: Qualified count looks reasonable (40-60%)
+  - Check: No major errors
+  - Note: Exact count for your records
+  - Time: ~30 seconds
+
+✓ DONE FOR THE DAY!
+
+───────────────────────────────────────────────────────────────────────────────
+WHAT THE SYSTEM DOES (You don't need to do anything)
+───────────────────────────────────────────────────────────────────────────────
+
+✓ Qualifies leads with Gemini AI
+✓ Sends personalized emails to qualified leads
+✓ Logs everything to Google Sheet
+✓ Schedules follow-up for Day 3
+✓ Sends Day 3 follow-up automatically
+✓ Schedules follow-up for Day 7
+✓ Sends Day 7 follow-up automatically
+✓ Updates Google Sheet with all activity
+
+───────────────────────────────────────────────────────────────────────────────
+WEEKLY REVIEW (Do This Every Sunday)
+───────────────────────────────────────────────────────────────────────────────
+
+☐ Check Google Sheet
+  - Scroll to latest entries
+  - Verify emails sent count
+  - Look for responses/replies
+  - Note any patterns
+
+☐ Review Qualification Rates
+  - Track average % qualified
+  - Note which industries perform best
+  - Identify which titles qualify most
+
+☐ Monitor System Health
+  - Check Vercel logs: vercel logs --follow
+  - Look for any errors
+  - Verify cron jobs running
+
+☐ Adjust If Needed
+  - If low qualification: Refine titles/industries
+  - If high volume: Consider increasing daily leads
+  - Update pain points/hooks if needed
+
+───────────────────────────────────────────────────────────────────────────────
+MONTHLY REVIEW (Do This First Day of Month)
+───────────────────────────────────────────────────────────────────────────────
+
+☐ Analyze Campaign Performance
+  - Total leads sent: _________
+  - Total qualified: _________
+  - Total responses: _________
+  - Response rate: __________% (responses ÷ qualified)
+
+☐ Identify Top Performers
+  - Best industry: ____________
+  - Best title level: __________
+  - Best region: ______________
+
+☐ Plan Optimizations
+  - Focus on top performers
+  - Adjust weak areas
+  - Plan next month strategy
+
+☐ Technical Review
+  - Check API usage (should be well below limits)
+  - Verify storage/sheets space
+  - Confirm cron jobs running
+  - Review error logs
+
+───────────────────────────────────────────────────────────────────────────────
+SUPPORTED INDUSTRIES (Use These Exactly)
+───────────────────────────────────────────────────────────────────────────────
+
+1. IT Services
+2. Automation Expert
+3. Voice Agents
+4. n8n
+5. Make
+6. Zapier
+7. No-Code
+8. Marketing & Advertising
+9. Technology
+
+───────────────────────────────────────────────────────────────────────────────
+DECISION-MAKER TITLES (What Qualifies)
+───────────────────────────────────────────────────────────────────────────────
+
+WILL QUALIFY:
+✓ CEO / CTO / COO / CFO
+✓ Founder / Co-Founder
+✓ President / VP / Director
+✓ Owner / Partner
+✓ Manager (with budget authority)
+
+WILL NOT QUALIFY:
+✗ Coordinator / Associate
+✗ Specialist / Analyst
+✗ Support / Representative
+✗ Junior titles
+✗ Interns / Assistants
+
+───────────────────────────────────────────────────────────────────────────────
+JSON FORMAT (Copy This Template)
+───────────────────────────────────────────────────────────────────────────────
+
+{
+  "leads": [
+    {
+      "name": "First Last",
+      "first_name": "First",
+      "email": "email@company.com",
+      "title": "CEO",
+      "company": "Company Name",
+      "industry": "IT Services",
+      "location": "City, State"
+    }
+  ]
+}
+
+───────────────────────────────────────────────────────────────────────────────
+DAILY NUMBERS TO TRACK
+───────────────────────────────────────────────────────────────────────────────
+
+Date: _______________
+
+Uploaded: __________ leads
+Qualified: __________ leads
+Qualified %: __________ %
+Emails Sent: __________ emails
+Errors: __________ 
+
+Notes:
+_________________________________________________________________________
+_________________________________________________________________________
+
+───────────────────────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+───────────────────────────────────────────────────────────────────────────────
+
+Problem: Leads not qualifying
+→ Check title (must be CEO, Founder, CTO, VP, Director, etc.)
+→ Check industry (must be in supported list)
+→ Check qualification score in results
+
+Problem: Emails not sending
+→ Verify Gmail login worked
+→ Check email format valid
+→ Check for error message in results
+
+Problem: Sheet not updating
+→ Verify sheet ID correct in config
+→ Check Google authorization
+→ Check API logs
+
+Problem: Follow-ups not sending
+→ Check cron job status in Vercel
+→ Verify date math (day 3 from sent date)
+→ Check logs for errors
+
+───────────────────────────────────────────────────────────────────────────────
+QUICK REFERENCE - YOUR URLS
+───────────────────────────────────────────────────────────────────────────────
+
+LOCAL DEVELOPMENT:
+Dashboard: http://localhost:3000
+
+PRODUCTION (After Deploy):
+Dashboard: https://YOUR_VERCEL_URL
+
+MONITORING:
+Google Sheet: https://docs.google.com/spreadsheets/d/your_google_sheet_id
+Vercel Logs: vercel logs --follow
+
+DOCUMENTATION:
+Quick Start: QUICKSTART.md
+Full Guide: SETUP.md
+JSON Format: LEADS_JSON_FORMAT.md
+Deployment: DEPLOYMENT.md
+
+───────────────────────────────────────────────────────────────────────────────
+SYSTEM STATUS
+───────────────────────────────────────────────────────────────────────────────
+
+☐ Gmail Connected: zubair@devtorque.co
+☐ Gemini API: Active (10 calls/min free tier)
+☐ Google Sheet: your_google_sheet_id
+☐ Cron Jobs: Day 3 & Day 7 automatic follow-ups
+☐ Deployment: Ready for Vercel
+
+───────────────────────────────────────────────────────────────────────────────
+
+YOUR DAILY 30-SECOND PROCESS:
+
+1. Prepare 100 leads → 2. Format JSON → 3. Upload → 4. Done!
+
+System handles:
+→ Qualification with AI
+→ Email sending
+→ Follow-ups (auto day 3 & 7)
+→ Sheet tracking
+
+RESULT: 300+ personalized emails per week, completely automated! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,49 @@
+{
+  "leads": [
+    {
+      "name": "Graham Wood",
+      "first_name": "Graham",
+      "email": "graham@shopik.io",
+      "title": "CEO",
+      "company": "Shopik",
+      "industry": "IT Services",
+      "location": "United States"
+    },
+    {
+      "name": "Brian Murphy",
+      "first_name": "Brian",
+      "email": "brian@murphconsulting.com",
+      "title": "Founder",
+      "company": "Murph Consulting",
+      "industry": "Automation Expert",
+      "location": "Dobbs Ferry, New York"
+    },
+    {
+      "name": "Sarah Chen",
+      "first_name": "Sarah",
+      "email": "sarah@techventures.com",
+      "title": "CTO",
+      "company": "Tech Ventures",
+      "industry": "Technology",
+      "location": "San Francisco, California"
+    },
+    {
+      "name": "Michael Rodriguez",
+      "first_name": "Michael",
+      "email": "m.rodriguez@makestudio.io",
+      "title": "Founder & CEO",
+      "company": "Make Studio",
+      "industry": "Make",
+      "location": "Austin, Texas"
+    },
+    {
+      "name": "Jennifer Lee",
+      "first_name": "Jennifer",
+      "email": "jennifer@n8npartners.com",
+      "title": "VP of Operations",
+      "company": "n8n Partners",
+      "industry": "n8n",
+      "location": "New York, New York"
+    }
+  ]
+}
