@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Instantiate inside the handler — not at module level — so build doesn't evaluate it
-  const redirectUri = `${process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "http://localhost:3000"}/api/auth/callback`;
+  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/auth/callback`;
   const oauth2Client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
