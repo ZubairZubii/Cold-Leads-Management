@@ -1,6 +1,12 @@
 import Groq from "groq-sdk";
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// Lazy-init: do NOT create at module level — Next.js evaluates modules during
+// build and the Groq constructor would run before env vars are available.
+let _groq: Groq | null = null;
+function getGroq(): Groq {
+  if (!_groq) _groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  return _groq;
+}
 
 export interface QualificationResult {
   painPoint: string;
@@ -71,7 +77,7 @@ export async function qualifyLeadWithGemini(lead: {
   location: string;
 }): Promise<QualificationResult> {
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await getGroq().chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [
         {

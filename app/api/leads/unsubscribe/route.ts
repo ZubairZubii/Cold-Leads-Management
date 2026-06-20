@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
+
 import { getFreshAccessToken } from "@/lib/token-store";
 import { updateLeadFollowup } from "@/lib/sheets-service";
 

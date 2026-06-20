@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
+
 import { qualifyLeadWithGemini } from "@/lib/gemini-service";
 import { generateEmailHTML, EmailTemplate } from "@/lib/gmail-service";
 

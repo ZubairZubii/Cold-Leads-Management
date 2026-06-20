@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { OAuth2Client } from "google-auth-library";
 import { saveRefreshToken } from "@/lib/token-store";
 
-const oauth2Client = new OAuth2Client(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "http://localhost:3000"}/api/auth/callback`
-);
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
@@ -14,6 +10,14 @@ export async function GET(request: NextRequest) {
   if (!code) {
     return NextResponse.json({ error: "No code provided" }, { status: 400 });
   }
+
+  // Instantiate inside the handler — not at module level — so build doesn't evaluate it
+  const redirectUri = `${process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "http://localhost:3000"}/api/auth/callback`;
+  const oauth2Client = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    redirectUri
+  );
 
   try {
     const { tokens } = await oauth2Client.getToken(code);

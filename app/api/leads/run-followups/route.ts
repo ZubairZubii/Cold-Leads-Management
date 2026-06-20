@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
+
 import { cookies } from "next/headers";
 import { getLeadsDueForFollowup, updateLeadFollowup } from "@/lib/sheets-service";
 import { qualifyLeadWithGemini } from "@/lib/gemini-service";
