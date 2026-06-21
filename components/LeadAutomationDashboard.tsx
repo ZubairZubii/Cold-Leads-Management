@@ -33,6 +33,7 @@ type PreviewTab = "initial" | "followup3day" | "followup7day";
 
 export default function LeadAutomationDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [jsonInput, setJsonInput] = useState("");
   const [results, setResults] = useState<ProcessResponse | null>(null);
@@ -59,6 +60,7 @@ export default function LeadAutomationDashboard() {
     const cron = params.get("cron");
     if (token) {
       setIsAuthenticated(true);
+      setAccessToken(token);
       if (rt) setRefreshToken(rt);
       if (cron === "ready") setCronReady(true);
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -120,7 +122,10 @@ export default function LeadAutomationDashboard() {
       try {
         const response = await fetch("/api/leads/process", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}),
+          },
           body: JSON.stringify({ lead }),
         });
 
@@ -179,7 +184,10 @@ export default function LeadAutomationDashboard() {
     try {
       const response = await fetch("/api/leads/preview", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}),
+        },
         body: JSON.stringify({ lead: leadsArray[0] }),
       });
 
@@ -206,7 +214,10 @@ export default function LeadAutomationDashboard() {
     setIsRunningFollowups(true);
     setFollowupRunResult(null);
     try {
-      const response = await fetch("/api/leads/run-followups", { method: "POST" });
+      const response = await fetch("/api/leads/run-followups", {
+        method: "POST",
+        headers: accessToken ? { "Authorization": `Bearer ${accessToken}` } : {},
+      });
       const data = await response.json();
       if (!response.ok) {
         setError(data.error || "Failed to run follow-ups");

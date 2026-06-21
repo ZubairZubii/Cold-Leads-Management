@@ -11,8 +11,10 @@ import { cookies } from "next/headers";
 // 3-second delay between calls so Vercel never times out.
 export async function POST(request: NextRequest) {
   try {
+    const authHeader = request.headers.get("authorization");
     const cookieStore = await cookies();
-    const token = cookieStore.get("gmail_token")?.value;
+    const token = (authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null)
+      || cookieStore.get("gmail_token")?.value;
 
     if (!token) {
       return NextResponse.json(

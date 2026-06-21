@@ -8,8 +8,10 @@ import { qualifyLeadWithGemini } from "@/lib/gemini-service";
 import { sendEmail, generateEmailHTML, hasLeadReplied } from "@/lib/gmail-service";
 
 export async function POST(request: NextRequest) {
+  const authHeader = request.headers.get("authorization");
   const cookieStore = await cookies();
-  const token = cookieStore.get("gmail_token")?.value;
+  const token = (authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null)
+    || cookieStore.get("gmail_token")?.value;
 
   if (!token) {
     return NextResponse.json(
