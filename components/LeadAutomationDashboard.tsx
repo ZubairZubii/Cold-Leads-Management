@@ -92,9 +92,12 @@ export default function LeadAutomationDashboard() {
     return { leads: leadsArray, error: "" };
   };
 
+  const [processingStatus, setProcessingStatus] = useState("");
+
   const handleProcessLeads = async () => {
     setError("");
     setSuccessMessage("");
+    setProcessingStatus("");
     setIsProcessing(true);
 
     const { leads: leadsArray, error: parseError } = parseLeadsFromInput();
@@ -104,29 +107,62 @@ export default function LeadAutomationDashboard() {
       return;
     }
 
-    try {
-      const response = await fetch("/api/leads/process", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ leads: leadsArray }),
-      });
+    const allResults: ProcessResult[] = [];
+    let successCount = 0;
+    let failureCount = 0;
 
-      const data: ProcessResponse = await response.json();
+    // Send one lead per request with a 3-second client-side delay between calls.
+    // This avoids Vercel's serverless timeout (10s Hobby / 60s Pro) entirely.
+    for (let i = 0; i < leadsArray.length; i++) {
+      const lead = leadsArray[i];
+      setProcessingStatus(`Sending ${i + 1} of ${leadsArray.length}: ${lead.name || lead.email}`);
 
-      if (!response.ok) {
-        setError(data.error || "Failed to process leads");
-        setIsProcessing(false);
-        return;
+      try {
+        const response = await fetch("/api/leads/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lead }),
+        });
+
+        const text = await response.text();
+        let data: any;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          failureCount++;
+          allResults.push({ email: lead.email, status: "error", error: "Server error (non-JSON response)" });
+          continue;
+        }
+
+        if (!response.ok) {
+          failureCount++;
+          allResults.push({ email: lead.email, status: "error", error: data.error || "Failed" });
+        } else {
+          successCount++;
+          allResults.push(data.result || { email: lead.email, status: "email_sent" });
+        }
+      } catch (err) {
+        failureCount++;
+        allResults.push({ email: lead.email, status: "error", error: err instanceof Error ? err.message : "Network error" });
       }
 
-      setResults(data);
-      setSuccessMessage(`Successfully processed ${data.summary.qualified} leads!`);
-      setJsonInput("");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setIsProcessing(false);
+      // Update results live after each email
+      setResults({
+        success: true,
+        summary: { total: i + 1, successCount, failureCount, qualified: successCount },
+        results: [...allResults],
+      });
+
+      // 3-second delay between emails (client-side — no Vercel timeout risk)
+      if (i < leadsArray.length - 1) {
+        await new Promise((r) => setTimeout(r, 3000));
+      }
     }
+
+    setProcessingStatus("");
+    setSuccessMessage(`Done! Sent ${successCount} of ${leadsArray.length} emails.`);
+    setJsonInput("");
+    setIsProcessing(false);
   };
 
   const handlePreview = async () => {
@@ -315,7 +351,7 @@ export default function LeadAutomationDashboard() {
                 disabled={isProcessing || !jsonInput.trim()}
                 className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-semibold py-3 rounded-lg transition"
               >
-                {isProcessing ? "Processing..." : "Process & Send Emails"}
+                {isProcessing ? (processingStatus || "Starting...") : "Process & Send Emails"}
               </Button>
               <Button
                 onClick={handlePreview}
